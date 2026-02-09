@@ -42,26 +42,23 @@ class _ScrollProgressIndicatorState extends State<ScrollProgressIndicator> {
 
   @override
   Widget build(BuildContext context) {
+    const barHeight = 3.0;
     return Positioned(
       top: 0,
       left: 0,
       right: 0,
       child: Container(
-        height: 3,
+        height: barHeight,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppTheme.primary,
-              AppTheme.secondary,
-            ],
-          ),
+          color: AppTheme.primary.withValues(alpha: 0.12),
         ),
         child: FractionallySizedBox(
-          widthFactor: _progress,
+          widthFactor: _progress.clamp(0.0, 1.0),
           alignment: Alignment.centerLeft,
           child: Container(
             decoration: BoxDecoration(
               gradient: AppTheme.primaryGradient,
+              borderRadius: BorderRadius.circular(barHeight / 2),
             ),
           ),
         ),

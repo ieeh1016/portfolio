@@ -37,7 +37,7 @@ class _LinkButtonState extends State<LinkButton>
     );
     _iconOffsetAnimation = Tween<Offset>(
       begin: Offset.zero,
-      end: const Offset(4, 0),
+      end: const Offset(0, 0),
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
@@ -76,15 +76,15 @@ class _LinkButtonState extends State<LinkButton>
             decoration: BoxDecoration(
               gradient: _isHovered ? AppTheme.primaryGradient : null,
               color: _isHovered ? null : Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
               border: Border.all(
-                color: _isHovered ? Colors.transparent : AppTheme.primary.withOpacity(0.3),
+                color: _isHovered ? Colors.transparent : AppTheme.primary.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               boxShadow: _isHovered
                   ? [
                       BoxShadow(
-                        color: AppTheme.primary.withOpacity(0.3),
+                        color: AppTheme.primary.withValues(alpha: 0.25),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -94,13 +94,10 @@ class _LinkButtonState extends State<LinkButton>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SlideTransition(
-                  position: _iconOffsetAnimation,
-                  child: Icon(
-                    widget.icon,
-                    size: 18,
-                    color: _isHovered ? Colors.white : AppTheme.primary,
-                  ),
+                Icon(
+                  widget.icon,
+                  size: 18,
+                  color: _isHovered ? Colors.white : AppTheme.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(

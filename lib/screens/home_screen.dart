@@ -406,35 +406,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContactChip(IconData icon, String text, VoidCallback onTap) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppTheme.primary.withValues(alpha: 0.3)),
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: AppTheme.primary),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: isDark ? AppTheme.darkTextSecondary : AppTheme.textSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return _HoverContactChip(icon: icon, text: text, onTap: onTap);
   }
 
   // ══════════════════════════════════════
@@ -453,19 +425,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ScaleReveal(
                 delay: Duration(milliseconds: 80 * i),
                 startScale: 0.5,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primary.withValues(alpha: isDark ? 0.12 : 0.08),
-                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                    border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
-                  ),
-                  child: Text(
-                    PortfolioData.skills[i],
-                    style: TextStyle(
-                      color: AppTheme.primary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                child: _HoverSkillChip(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withValues(alpha: isDark ? 0.12 : 0.08),
+                      borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                      border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+                    ),
+                    child: Text(
+                      PortfolioData.skills[i],
+                      style: TextStyle(
+                        color: AppTheme.primary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -484,20 +458,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle('경력', key: _sectionKeys['career']),
-        // 회사 헤더
+        // 회사 헤더 (로고: assets/ktaltimedia.PNG)
         ScrollReveal(
           offset: const Offset(0, 40),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppTheme.primary,
+              SizedBox(
+                width: 56,
+                height: 56,
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                  child: Image.asset(
+                    'assets/ktaltimedia.PNG',
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: AppTheme.primary.withValues(alpha: 0.12),
+                      child: Icon(Icons.business, color: AppTheme.primary, size: 28),
+                    ),
+                  ),
                 ),
-                child: Icon(Icons.business, color: AppTheme.darkBackground, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -531,12 +511,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return ScrollReveal(
       delay: Duration(milliseconds: delayMs),
       offset: const Offset(40, 30),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border(left: BorderSide(color: AppTheme.primary, width: 3)),
-        ),
-        padding: const EdgeInsets.only(left: 24),
-        child: Column(
+      child: _HoverProjectCard(
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(left: BorderSide(color: AppTheme.primary, width: 3)),
+          ),
+          padding: const EdgeInsets.only(left: 24),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -610,6 +591,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -908,7 +890,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContactRow(IconData icon, String label, String value, VoidCallback? onTap) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final content = Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Row(
@@ -968,6 +949,135 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> _launchMail(String email) async {
     final uri = Uri.parse('mailto:$email');
     if (await canLaunchUrl(uri)) await launchUrl(uri);
+  }
+}
+
+class _HoverContactChip extends StatefulWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onTap;
+
+  const _HoverContactChip({
+    required this.icon,
+    required this.text,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverContactChip> createState() => _HoverContactChipState();
+}
+
+class _HoverContactChipState extends State<_HoverContactChip> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: _hover ? AppTheme.primary : AppTheme.primary.withValues(alpha: 0.3),
+              width: _hover ? 1.5 : 1,
+            ),
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+            boxShadow: _hover
+                ? [BoxShadow(color: AppTheme.primary.withValues(alpha: 0.15), blurRadius: 8, offset: const Offset(0, 2))]
+                : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(widget.icon, size: 16, color: AppTheme.primary),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  widget.text,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: isDark ? AppTheme.darkTextSecondary : AppTheme.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HoverSkillChip extends StatefulWidget {
+  final Widget child;
+
+  const _HoverSkillChip({required this.child});
+
+  @override
+  State<_HoverSkillChip> createState() => _HoverSkillChipState();
+}
+
+class _HoverSkillChipState extends State<_HoverSkillChip> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: AnimatedScale(
+        scale: _hover ? 1.05 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+class _HoverProjectCard extends StatefulWidget {
+  final Widget child;
+
+  const _HoverProjectCard({required this.child});
+
+  @override
+  State<_HoverProjectCard> createState() => _HoverProjectCardState();
+}
+
+class _HoverProjectCardState extends State<_HoverProjectCard> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        transform: Matrix4.translationValues(0, _hover ? -3 : 0, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          boxShadow: _hover
+              ? [
+                  BoxShadow(
+                    color: AppTheme.primary.withValues(alpha: 0.08),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: widget.child,
+      ),
+    );
   }
 }
 
