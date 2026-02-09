@@ -1,16 +1,19 @@
-# untitled
+# 현영우 포트폴리오
 
-A new Flutter project.
+도전하고 발전하는 개발자 **현영우**의 포트폴리오 사이트입니다.
 
-## Getting Started
+- **라이브 미리보기:** [https://ieeh1016.github.io/portfolio/](https://ieeh1016.github.io/portfolio/)
+- Flutter로 제작된 웹/앱 포트폴리오입니다.
 
-This project is a starting point for a Flutter application.
+## 실행 방법
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+웹 빌드:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter build web --base-href /portfolio/
+```
