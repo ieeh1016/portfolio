@@ -50,7 +50,7 @@ class PortfolioData {
   static const String companyName = '㈜KT Altimedia';
   static const String careerPeriod = '2022. 10 ~ 재직 중';
   static const String careerTotal = '총 3년 5개월';
-  static const String position = 'KT Altimedia AX/DX 사업본부 Client팀 연구원';
+  static const String position = 'AX/DX 사업본부 Client팀 연구원';
   static const String roleSummary = 'KT IPTV Android App 개발 및 Flutter 앱 개발';
 
   // 경력 프로젝트 상세
