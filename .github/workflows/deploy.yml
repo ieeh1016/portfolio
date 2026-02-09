@@ -4,17 +4,8 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,27 +13,25 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: "3.22.0"
           channel: "stable"
           cache: true
 
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build web
-        run: flutter build web --no-wasm-dry-run
+      - name: Build web (base href for GitHub Pages)
+        run: flutter build web --release --no-wasm-dry-run --base-href "/portfolio/"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Verify build output
+        run: |
+          test -f build/web/index.html || exit 1
+          test -f build/web/main.dart.js || exit 1
+          grep -q 'base href' build/web/index.html || exit 1
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: build/web
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
+          force_orphan: true
