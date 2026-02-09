@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 /// 뷰포트 기반 스크롤 애니메이션 섹션
 class ViewportAnimatedSection extends StatefulWidget {
@@ -58,26 +59,31 @@ class _ViewportAnimatedSectionState extends State<ViewportAnimatedSection>
 
   void _checkVisibility() {
     if (_hasAnimated || !mounted) return;
-    
+
     final context = this.context;
     final renderObject = context.findRenderObject();
     if (renderObject == null || !renderObject.attached) return;
-    
-    final viewport = RenderAbstractViewport.of(renderObject);
+
+    final viewport = RenderAbstractViewport.maybeOf(renderObject);
     if (viewport == null) return;
-    
-    final revealOffset = viewport.getRevealOffset(renderObject);
-    final viewportSize = viewport.size;
+
     final renderBox = renderObject as RenderBox;
     final size = renderBox.size;
-    
-    final visibleTop = -revealOffset.dy;
-    final visibleBottom = visibleTop + viewportSize.height;
-    final sectionTop = renderBox.localToGlobal(Offset.zero).dy;
-    final sectionBottom = sectionTop + size.height;
-    
-    final visibleRatio = (visibleBottom - sectionTop) / (size.height + viewportSize.height);
-    
+    if (size.height <= 0) return;
+
+    final viewportBox = viewport is RenderBox ? viewport as RenderBox : null;
+    if (viewportBox == null) return;
+    final viewportSize = viewportBox.size;
+
+    final revealed = viewport.getOffsetToReveal(renderObject, 0.0);
+    final sectionTopInViewport = revealed.rect.top;
+    final sectionBottomInViewport = revealed.rect.bottom;
+    final visibleTop = 0.0;
+    final visibleBottom = viewportSize.height;
+    final visibleHeight = (sectionBottomInViewport.clamp(visibleTop, visibleBottom) -
+        sectionTopInViewport.clamp(visibleTop, visibleBottom));
+    final visibleRatio = (visibleHeight / size.height).clamp(0.0, 1.0);
+
     if (visibleRatio >= widget.threshold && !_hasAnimated) {
       _hasAnimated = true;
       _controller.forward();

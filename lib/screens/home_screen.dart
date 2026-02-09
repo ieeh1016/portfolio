@@ -538,7 +538,7 @@ class _HomeScreenState extends State<HomeScreen> {
             right: _isMobile ? 16 : 40,
             child: ThemeToggle(
               isDark: isDark,
-              onToggle: _toggleTheme,
+              onToggle: widget.onThemeToggle,
             ),
           ),
         ],
