@@ -7,8 +7,21 @@ void main() {
   runApp(const PortfolioApp());
 }
 
-class PortfolioApp extends StatelessWidget {
+class PortfolioApp extends StatefulWidget {
   const PortfolioApp({super.key});
+
+  @override
+  State<PortfolioApp> createState() => _PortfolioAppState();
+}
+
+class _PortfolioAppState extends State<PortfolioApp> {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  void _toggleTheme(bool isDark) {
+    setState(() {
+      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +31,13 @@ class PortfolioApp extends StatelessWidget {
       theme: AppTheme.lightTheme.copyWith(
         textTheme: GoogleFonts.notoSansKrTextTheme(AppTheme.lightTheme.textTheme),
       ),
-      home: const HomeScreen(),
+      darkTheme: AppTheme.darkTheme.copyWith(
+        textTheme: GoogleFonts.notoSansKrTextTheme(AppTheme.darkTheme.textTheme),
+      ),
+      themeMode: _themeMode,
+      home: HomeScreen(
+        onThemeToggle: _toggleTheme,
+      ),
     );
   }
 }

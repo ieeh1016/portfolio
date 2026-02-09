@@ -23,15 +23,22 @@ class _LinkButtonState extends State<LinkButton>
   bool _isHovered = false;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  late Animation<Offset> _iconOffsetAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+    _iconOffsetAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(4, 0),
+    ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
   }
@@ -68,7 +75,7 @@ class _LinkButtonState extends State<LinkButton>
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               gradient: _isHovered ? AppTheme.primaryGradient : null,
-              color: _isHovered ? null : AppTheme.surface,
+              color: _isHovered ? null : Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: _isHovered ? Colors.transparent : AppTheme.primary.withOpacity(0.3),
@@ -87,10 +94,13 @@ class _LinkButtonState extends State<LinkButton>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  widget.icon,
-                  size: 18,
-                  color: _isHovered ? Colors.white : AppTheme.primary,
+                SlideTransition(
+                  position: _iconOffsetAnimation,
+                  child: Icon(
+                    widget.icon,
+                    size: 18,
+                    color: _isHovered ? Colors.white : AppTheme.primary,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
