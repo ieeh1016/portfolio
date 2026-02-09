@@ -53,7 +53,6 @@ class _ScrollProgressIndicatorState extends State<ScrollProgressIndicator> {
             colors: [
               AppTheme.primary,
               AppTheme.secondary,
-              AppTheme.accent,
             ],
           ),
         ),

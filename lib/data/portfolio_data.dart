@@ -3,7 +3,7 @@ class PortfolioData {
   // 기본 정보
   static const String name = '현영우';
   static const String tagline = '도전하고 발전하는 개발자 현영우입니다.';
-  static const String birth = '1998년 (만 27세)';
+  static const String birth = '1998년 (만 28세)';
   static const String phone = '010-7122-0450';
   static const String email = 'ieeh0122@naver.com';
   static const String address = '경기 화성시 영천동';
@@ -47,10 +47,10 @@ class PortfolioData {
       '유니티엔진을 이용한 안드로이드 모바일 교육용 블록코딩 게임 개발 - 플레이 스토어 출시';
 
   // 경력 요약
-  static const String companyName = '㈜케이티알티미디어';
+  static const String companyName = '㈜KT Altimedia';
   static const String careerPeriod = '2022. 10 ~ 재직 중';
-  static const String careerTotal = '총 3년 3개월';
-  static const String position = 'AX/DX 사업본부 Client팀 연구원';
+  static const String careerTotal = '총 3년 5개월';
+  static const String position = 'KT Altimedia AX/DX 사업본부 Client팀 연구원';
   static const String roleSummary = 'KT IPTV Android App 개발 및 Flutter 앱 개발';
 
   // 경력 프로젝트 상세

@@ -1,183 +1,53 @@
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
-class BlobBackground extends StatefulWidget {
+/// 브루탈 스타일: 단색 + 미세 그리드 라인 (블롭/그라데이션 제거)
+class BlobBackground extends StatelessWidget {
   final Widget child;
 
   const BlobBackground({super.key, required this.child});
 
   @override
-  State<BlobBackground> createState() => _BlobBackgroundState();
-}
-
-class _BlobBackgroundState extends State<BlobBackground>
-    with TickerProviderStateMixin {
-  late AnimationController _controller1;
-  late AnimationController _controller2;
-  late AnimationController _controller3;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller1 = AnimationController(
-      duration: const Duration(seconds: 20),
-      vsync: this,
-    )..repeat();
-    _controller2 = AnimationController(
-      duration: const Duration(seconds: 25),
-      vsync: this,
-    )..repeat();
-    _controller3 = AnimationController(
-      duration: const Duration(seconds: 30),
-      vsync: this,
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller1.dispose();
-    _controller2.dispose();
-    _controller3.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return Stack(
       children: [
-        AnimatedBuilder(
-          animation: Listenable.merge([_controller1, _controller2, _controller3]),
-          builder: (context, child) {
-            return CustomPaint(
-              painter: BlobPainter(
-                animation1: _controller1.value,
-                animation2: _controller2.value,
-                animation3: _controller3.value,
-                isDark: isDark,
-              ),
-              size: Size.infinite,
-            );
-          },
+        CustomPaint(
+          painter: _MinimalGridPainter(isDark: isDark),
+          size: Size.infinite,
         ),
-        widget.child,
+        child,
       ],
     );
   }
 }
 
-class BlobPainter extends CustomPainter {
-  final double animation1;
-  final double animation2;
-  final double animation3;
+class _MinimalGridPainter extends CustomPainter {
   final bool isDark;
 
-  BlobPainter({
-    required this.animation1,
-    required this.animation2,
-    required this.animation3,
-    required this.isDark,
-  });
+  _MinimalGridPainter({required this.isDark});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint1 = Paint()
-      ..shader = RadialGradient(
-        colors: isDark
-            ? [
-                AppTheme.primary.withOpacity(0.15),
-                AppTheme.primary.withOpacity(0.05),
-              ]
-            : [
-                AppTheme.primary.withOpacity(0.2),
-                AppTheme.primary.withOpacity(0.05),
-              ],
-      ).createShader(
-        Rect.fromCircle(
-          center: Offset(
-            size.width * 0.2 + (animation1 * 100),
-            size.height * 0.3 + (animation2 * 80),
-          ),
-          radius: 200,
-        ),
-      );
+    final bg = isDark ? AppTheme.darkBackground : AppTheme.background;
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = bg);
 
-    final paint2 = Paint()
-      ..shader = RadialGradient(
-        colors: isDark
-            ? [
-                AppTheme.secondary.withOpacity(0.15),
-                AppTheme.secondary.withOpacity(0.05),
-              ]
-            : [
-                AppTheme.secondary.withOpacity(0.2),
-                AppTheme.secondary.withOpacity(0.05),
-              ],
-      ).createShader(
-        Rect.fromCircle(
-          center: Offset(
-            size.width * 0.8 - (animation2 * 100),
-            size.height * 0.5 + (animation3 * 100),
-          ),
-          radius: 250,
-        ),
-      );
+    final lineColor = isDark
+        ? Colors.white.withOpacity(0.03)
+        : Colors.black.withOpacity(0.04);
+    final paint = Paint()..color = lineColor..strokeWidth = 1;
 
-    final paint3 = Paint()
-      ..shader = RadialGradient(
-        colors: isDark
-            ? [
-                AppTheme.accent.withOpacity(0.1),
-                AppTheme.accent.withOpacity(0.03),
-              ]
-            : [
-                AppTheme.accent.withOpacity(0.15),
-                AppTheme.accent.withOpacity(0.03),
-              ],
-      ).createShader(
-        Rect.fromCircle(
-          center: Offset(
-            size.width * 0.5 + (animation3 * 120),
-            size.height * 0.7 - (animation1 * 90),
-          ),
-          radius: 180,
-        ),
-      );
-
-    canvas.drawCircle(
-      Offset(
-        size.width * 0.2 + (animation1 * 100),
-        size.height * 0.3 + (animation2 * 80),
-      ),
-      200,
-      paint1,
-    );
-
-    canvas.drawCircle(
-      Offset(
-        size.width * 0.8 - (animation2 * 100),
-        size.height * 0.5 + (animation3 * 100),
-      ),
-      250,
-      paint2,
-    );
-
-    canvas.drawCircle(
-      Offset(
-        size.width * 0.5 + (animation3 * 120),
-        size.height * 0.7 - (animation1 * 90),
-      ),
-      180,
-      paint3,
-    );
+    const step = 48.0;
+    for (double x = 0; x <= size.width + step; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y <= size.height + step; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
   }
 
   @override
-  bool shouldRepaint(BlobPainter oldDelegate) {
-    return oldDelegate.animation1 != animation1 ||
-        oldDelegate.animation2 != animation2 ||
-        oldDelegate.animation3 != animation3 ||
-        oldDelegate.isDark != isDark;
+  bool shouldRepaint(covariant _MinimalGridPainter oldDelegate) {
+    return oldDelegate.isDark != isDark;
   }
 }

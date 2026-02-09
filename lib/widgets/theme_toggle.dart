@@ -58,11 +58,11 @@ class _ThemeToggleState extends State<ThemeToggle>
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          gradient: AppTheme.primaryGradient,
-          shape: BoxShape.circle,
+          color: AppTheme.primary,
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primary.withOpacity(0.3),
+              color: AppTheme.primary.withOpacity(0.25),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -72,7 +72,7 @@ class _ThemeToggleState extends State<ThemeToggle>
           turns: _rotationAnimation,
           child: Icon(
             widget.isDark ? Icons.dark_mode : Icons.light_mode,
-            color: Colors.white,
+            color: AppTheme.darkBackground,
             size: 24,
           ),
         ),

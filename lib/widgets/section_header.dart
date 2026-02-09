@@ -24,10 +24,10 @@ class SectionHeader extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
-                  borderRadius: BorderRadius.circular(12),
+                  color: AppTheme.primary,
+                  borderRadius: BorderRadius.circular(AppTheme.cardRadius),
                 ),
-                child: Icon(icon, size: 20, color: Colors.white),
+                child: Icon(icon, size: 20, color: AppTheme.darkBackground),
               ),
               const SizedBox(width: 12),
             ],
@@ -38,7 +38,9 @@ class SectionHeader extends StatelessWidget {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppTheme.textPrimary,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? AppTheme.darkTextPrimary
+                              : AppTheme.textPrimary,
                         ),
                   ),
                   if (subtitle != null) ...[

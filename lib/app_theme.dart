@@ -1,62 +1,45 @@
 import 'package:flutter/material.dart';
 
-/// Toss 스타일: 화려하고 모던한 UI/GUI
+/// 브루탈 + 타이포그래피: 다크 기본, 단일 포인트 컬러, 각진 형태
 class AppTheme {
-  // Light Theme 색상
-  static const Color primary = Color(0xFF3182F6);
-  static const Color primaryLight = Color(0xFFE8F0FE);
-  static const Color secondary = Color(0xFF8B5CF6);
-  static const Color accent = Color(0xFF00D9FF);
-  
-  static const Color background = Color(0xFFF8F9FA);
+  // 단일 포인트 컬러 (네온 틸)
+  static const Color primary = Color(0xFF00D4AA);
+  static const Color primaryLight = Color(0xFFE6FAF5);
+  static const Color secondary = Color(0xFF00D4AA);
+
+  // Light
+  static const Color background = Color(0xFFFAFAFA);
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceElevated = Color(0xFFFFFFFF);
-  
-  static const Color textPrimary = Color(0xFF191F28);
-  static const Color textSecondary = Color(0xFF6B7684);
-  static const Color textTertiary = Color(0xFFB0B8C1);
-  
-  // Dark Theme 색상
-  static const Color darkBackground = Color(0xFF0F1419);
-  static const Color darkSurface = Color(0xFF1A1F2E);
-  static const Color darkSurfaceElevated = Color(0xFF252B3D);
-  
-  static const Color darkTextPrimary = Color(0xFFE4E7EB);
-  static const Color darkTextSecondary = Color(0xFF9CA3AF);
-  static const Color darkTextTertiary = Color(0xFF6B7280);
-  
-  // 그라데이션
+  static const Color surfaceElevated = Color(0xFFF5F5F5);
+  static const Color textPrimary = Color(0xFF0C0C0C);
+  static const Color textSecondary = Color(0xFF525252);
+  static const Color textTertiary = Color(0xFF737373);
+
+  // Dark (기본 권장)
+  static const Color darkBackground = Color(0xFF0C0C0C);
+  static const Color darkSurface = Color(0xFF141414);
+  static const Color darkSurfaceElevated = Color(0xFF1A1A1A);
+  static const Color darkTextPrimary = Color(0xFFFAFAFA);
+  static const Color darkTextSecondary = Color(0xFFA3A3A3);
+  static const Color darkTextTertiary = Color(0xFF737373);
+
+  // 그라데이션 최소화 (액센트 단색 위주, 필요 시만)
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF3182F6), Color(0xFF8B5CF6)],
+    colors: [Color(0xFF00D4AA), Color(0xFF00A884)],
   );
-  
+
   static const LinearGradient accentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF00D9FF), Color(0xFF3182F6)],
+    colors: [Color(0xFF00D4AA), Color(0xFF00A884)],
   );
-  
-  static const LinearGradient heroGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      Color(0xFFE8F0FE),
-      Color(0xFFF0E8FE),
-      Color(0xFFFEF0E8),
-    ],
-  );
-  
-  static const LinearGradient darkHeroGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF1E293B),
-      Color(0xFF2D1B3D),
-      Color(0xFF3D2B1B),
-    ],
-  );
+
+  static const LinearGradient heroGradient = primaryGradient;
+
+  static const double cardRadius = 6.0;
+  static const double buttonRadius = 6.0;
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -82,7 +65,7 @@ class AppTheme {
         color: surface,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(cardRadius),
         ),
         margin: EdgeInsets.zero,
       ),
@@ -96,22 +79,23 @@ class AppTheme {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(6),
         ),
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           color: textPrimary,
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
-          height: 1.2,
-          letterSpacing: -1,
+          fontSize: 48,
+          fontWeight: FontWeight.w800,
+          height: 1.1,
+          letterSpacing: -2,
         ),
         headlineMedium: TextStyle(
           color: textPrimary,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          height: 1.3,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
+          height: 1.2,
+          letterSpacing: -0.5,
         ),
         titleLarge: TextStyle(
           color: textPrimary,
@@ -144,17 +128,17 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primary,
-          foregroundColor: Colors.white,
+          foregroundColor: darkBackground,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(buttonRadius),
           ),
         ),
       ),
     );
   }
-  
+
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
@@ -179,7 +163,7 @@ class AppTheme {
         color: darkSurface,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(cardRadius),
         ),
         margin: EdgeInsets.zero,
       ),
@@ -193,22 +177,23 @@ class AppTheme {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(6),
         ),
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           color: darkTextPrimary,
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
-          height: 1.2,
-          letterSpacing: -1,
+          fontSize: 48,
+          fontWeight: FontWeight.w800,
+          height: 1.1,
+          letterSpacing: -2,
         ),
         headlineMedium: TextStyle(
           color: darkTextPrimary,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          height: 1.3,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
+          height: 1.2,
+          letterSpacing: -0.5,
         ),
         titleLarge: TextStyle(
           color: darkTextPrimary,
@@ -241,53 +226,37 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primary,
-          foregroundColor: Colors.white,
+          foregroundColor: darkBackground,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(buttonRadius),
           ),
         ),
       ),
     );
   }
-  
-  // 그림자
+
   static List<BoxShadow> get cardShadow => [
         BoxShadow(
           color: Colors.black.withOpacity(0.04),
-          blurRadius: 20,
-          offset: const Offset(0, 4),
-        ),
-        BoxShadow(
-          color: Colors.black.withOpacity(0.02),
-          blurRadius: 8,
+          blurRadius: 12,
           offset: const Offset(0, 2),
         ),
       ];
-  
+
   static List<BoxShadow> get cardShadowHover => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.08),
-          blurRadius: 30,
-          offset: const Offset(0, 8),
-        ),
-        BoxShadow(
-          color: Colors.black.withOpacity(0.04),
-          blurRadius: 12,
-          offset: const Offset(0, 4),
-        ),
-      ];
-  
-  static List<BoxShadow> get darkCardShadow => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.3),
+          color: primary.withOpacity(0.15),
           blurRadius: 20,
           offset: const Offset(0, 4),
         ),
+      ];
+
+  static List<BoxShadow> get darkCardShadow => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.2),
-          blurRadius: 8,
+          color: Colors.black.withOpacity(0.4),
+          blurRadius: 12,
           offset: const Offset(0, 2),
         ),
       ];
