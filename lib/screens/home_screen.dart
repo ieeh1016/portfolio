@@ -210,19 +210,54 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 이름 - 타이핑
+                  // 이름 - 타이핑 (세련된 타이포 + 은은한 그림자)
                   Text(
                     '$visibleName$cursor',
                     style: GoogleFonts.syne(
                       fontSize: nameSize,
                       fontWeight: FontWeight.w800,
                       color: AppTheme.textPrimary,
-                      letterSpacing: -2,
-                      height: 1.1,
+                      letterSpacing: -1.5,
+                      height: 1.08,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withValues(alpha: 0.06),
+                          offset: const Offset(0, 2),
+                          blurRadius: 8,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  // 태그라인 - 아래에서 위로 슬라이드
+                  const SizedBox(height: 20),
+                  // 가벼운 인사 - 인용 스타일 (좌측 악센트 라인)
+                  Opacity(
+                    opacity: tagAnim.value,
+                    child: Transform.translate(
+                      offset: Offset(0, 20 * (1 - tagAnim.value)),
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                              color: AppTheme.primary.withValues(alpha: 0.35),
+                              width: 3,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          PortfolioData.heroGreeting,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: AppTheme.textTertiary,
+                            fontSize: _isMobile ? 15 : 17,
+                            height: 1.55,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // 태그라인 - 위계 강조
                   Opacity(
                     opacity: tagAnim.value,
                     child: Transform.translate(
@@ -232,38 +267,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: AppTheme.textSecondary,
                           fontSize: _isMobile ? 18 : 22,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.3,
+                          height: 1.45,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  // 직책·경력 - 포인트 컬러
-                  Opacity(
-                    opacity: subAnim.value,
-                    child: Transform.translate(
-                      offset: Offset(0, 20 * (1 - subAnim.value)),
-                      child: Text(
-                        '${PortfolioData.position} · ${PortfolioData.careerTotal}',
-                        style: TextStyle(
-                          color: AppTheme.primary,
-                          fontSize: _isMobile ? 14 : 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  // 라인
+                  const SizedBox(height: 28),
+                  // 악센트 라인 (둥근 끝, 2px)
                   Opacity(
                     opacity: lineAnim.value,
                     child: Container(
-                      height: 1,
-                      width: 80 * lineAnim.value,
-                      color: AppTheme.primary.withValues(alpha: 0.4),
+                      height: 2,
+                      width: (80 * lineAnim.value).clamp(0.0, 120),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary.withValues(alpha: 0.35),
+                        borderRadius: BorderRadius.circular(1),
+                      ),
                     ),
                   ),
-                  SizedBox(height: screenH * 0.12),
-                  // 스크롤 인디케이터
+                  SizedBox(height: screenH * 0.14),
+                  // 스크롤 인디케이터 - 미니멀
                   Opacity(
                     opacity: arrowAnim.value * fadeOut,
                     child: Center(
@@ -272,18 +297,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           Text(
                             'SCROLL',
                             style: TextStyle(
-                              fontSize: 11,
-                              color: AppTheme.textTertiary,
-                              letterSpacing: 4,
+                              fontSize: 10,
+                              color: AppTheme.textTertiary.withValues(alpha: 0.9),
+                              letterSpacing: 5,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           AnimatedBuilder(
                             animation: _arrowCtrl,
                             builder: (_, __) => Transform.translate(
                               offset: Offset(0, 6 * _arrowCtrl.value),
-                              child: Icon(Icons.keyboard_arrow_down, color: AppTheme.primary, size: 24),
+                              child: Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: AppTheme.primary.withValues(alpha: 0.85),
+                                size: 28,
+                              ),
                             ),
                           ),
                         ],
@@ -355,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   // ══════════════════════════════════════
-  // ABOUT - 타이핑 텍스트
+  // ABOUT - 카드형 + 연락처
   // ══════════════════════════════════════
   Widget _buildAbout(BuildContext context) {
     return _constrained(Column(
@@ -364,38 +393,68 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _sectionTitle('소개', key: _sectionKeys['about']),
         ScrollReveal(
           delay: Duration.zero,
-          offset: const Offset(0, 50),
-          child: Text(
-            PortfolioData.tagline,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontSize: _isMobile ? 22 : 28,
-              fontWeight: FontWeight.w700,
-              height: 1.4,
+          offset: const Offset(0, 40),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(_isMobile ? 24 : 32),
+            decoration: BoxDecoration(
+              color: AppTheme.surface.withValues(alpha: 0.9),
+              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+              border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+              boxShadow: AppTheme.cardShadow,
             ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        ScrollReveal(
-          delay: const Duration(milliseconds: 200),
-          offset: const Offset(0, 50),
-          child: Text(
-            '${PortfolioData.companyName} ${PortfolioData.position}으로\n${PortfolioData.roleSummary}을 담당하고 있습니다.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              height: 1.8,
-              color: AppTheme.textSecondary,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(Icons.person_outline_rounded, color: AppTheme.primary, size: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        '${PortfolioData.companyName} ${PortfolioData.position}으로\n${PortfolioData.roleSummary}을 담당하고 있습니다.',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontSize: _isMobile ? 15 : 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.65,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  height: 1,
+                  color: Colors.black.withValues(alpha: 0.06),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  '연락처',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: AppTheme.textTertiary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    _buildContactChip(Icons.phone_outlined, PortfolioData.phone, () => _launchTel(PortfolioData.phone)),
+                    const SizedBox(width: 12),
+                    _buildContactChip(Icons.email_outlined, PortfolioData.email, () => _launchMail(PortfolioData.email)),
+                  ],
+                ),
+              ],
             ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        ScrollReveal(
-          delay: const Duration(milliseconds: 400),
-          offset: const Offset(0, 50),
-          child: Row(
-            children: [
-              _buildContactChip(Icons.phone_outlined, PortfolioData.phone, () => _launchTel(PortfolioData.phone)),
-              const SizedBox(width: 12),
-              _buildContactChip(Icons.email_outlined, PortfolioData.email, () => _launchMail(PortfolioData.email)),
-            ],
           ),
         ),
       ],
@@ -407,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   // ══════════════════════════════════════
-  // SKILLS - 카테고리별 그룹 (Android/Flutter Portfolio 강조)
+  // SKILLS - 카테고리별 그룹 + 스크롤 리빌 애니메이션
   // ══════════════════════════════════════
   Widget _buildSkills(BuildContext context) {
     final categoryLabels = PortfolioData.skillsByCategory.keys.toList();
@@ -417,7 +476,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _sectionTitle('기술 스택', key: _sectionKeys['skills']),
         ScrollReveal(
           delay: Duration.zero,
-          offset: const Offset(0, 50),
+          offset: const Offset(0, 45),
+          duration: const Duration(milliseconds: 600),
           child: Text(
             PortfolioData.highlightsSummary,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -429,8 +489,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         const SizedBox(height: 28),
         for (var c = 0; c < categoryLabels.length; c++) ...[
           ScrollReveal(
-            delay: Duration(milliseconds: 100 * c),
-            offset: const Offset(0, 50),
+            delay: Duration(milliseconds: 80 + 120 * c),
+            offset: const Offset(0, 45),
+            duration: const Duration(milliseconds: 550),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
@@ -449,8 +510,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             children: [
               for (var i = 0; i < (PortfolioData.skillsByCategory[categoryLabels[c]] ?? []).length; i++)
                 ScrollReveal(
-                  delay: Duration(milliseconds: 100 * c + 60 * i),
-                  offset: const Offset(0, 50),
+                  delay: Duration(milliseconds: 80 + 120 * c + 50 * i),
+                  offset: const Offset(0, 45),
+                  duration: const Duration(milliseconds: 500),
                   child: _HoverSkillChip(
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -624,9 +686,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     fontWeight: FontWeight.w600,
                   ),
             ),
-            const SizedBox(height: 16),
-            // 기술 스택 (접힌 상태에서도 노출 — 개발자 Portfolio 강조)
-            _buildProjectTechChips(project),
             const SizedBox(height: 20),
             // 역할 (라벨 없이 한 줄)
             Text(

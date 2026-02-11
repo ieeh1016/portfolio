@@ -2,6 +2,8 @@
 class PortfolioData {
   // 기본 정보
   static const String name = '현영우';
+  /// 첫 화면 히어로용 가벼운 인사/한줄 소개
+  static const String heroGreeting = '안녕하세요. Android · Flutter로 더 나은 경험을 만들고 있습니다.';
   static const String tagline = '도전하고 발전하는 개발자 현영우입니다.';
   static const String birth = '1998년 (만 28세)';
   static const String phone = '010-7122-0450';
@@ -84,7 +86,7 @@ class PortfolioData {
       ],
       architecture: '기존 MVC 구조 유지보수 및 안정화',
       language: 'Java',
-      tech: 'Android SDK, Retrofit, OkHttp, Glide',
+      tech: 'Retrofit, OkHttp, Glide',
       achievement:
       'HCN·Skylife·KT 3개 사업자 앱에 동일 구조로 안정 적용 완료. '
           '마이메뉴·검색 관련 주요 QA 이슈 다수 해결 및 런칭 이후 안정적인 운영 환경 구축.',
@@ -106,9 +108,9 @@ class PortfolioData {
         '검색: 통합 검색, 연령·카테고리 필터, 자동완성·트렌드 검색 API 연동 및 로컬 캐싱 구조 설계',
         'ExoPlayer 연동 구조 개선 및 Coil 캐시 전략 적용으로 콘텐츠 진입 체감 속도 개선',
       ],
-      architecture: 'Clean Architecture (Presentation / Domain / Data Layer 분리)',
+      architecture: 'MVVM + Clean Architecture (Presentation / Domain / Data Layer 분리)',
       language: 'Kotlin',
-      tech: 'Hilt, Jetpack Navigation, Coroutines, StateFlow, Retrofit, Coil, ExoPlayer',
+      tech: 'Hilt, Jetpack Navigation, Coroutines, LiveData, Room, StateFlow, Retrofit',
       achievement:
       'Native 전환 후 앱 실행 및 콘텐츠 진입 속도 약 30% 이상 개선. '
           '전 그룹사 누적 700만 명 이상 사용자 규모에서 안정적으로 서비스 운영 중.',
@@ -128,9 +130,9 @@ class PortfolioData {
         '기존 가입자 이관 및 유지 안내 다이얼로그 설계로 예외 케이스 최소화',
         'ViewBinding·ConstraintLayout 기반 레이아웃 정리 및 회귀 테스트 시나리오 정비',
       ],
-      architecture: 'MVVM',
+      architecture: 'MVVM + Clean Architecture (Presentation / Domain / Data Layer 분리)',
       language: 'Kotlin',
-      tech: 'Retrofit, Glide, Android Jetpack, ViewBinding, ConstraintLayout',
+      tech: 'Hilt, Jetpack Navigation, Coroutines, LiveData, Room, StateFlow, Retrofit, DataBinding',
       achievement:
       'Disney+·Tving 요금제 개편을 일정 내 안정 반영. '
           '약 3만 명 규모의 부가서비스 사용자 대상 이관·결제 오류 없이 운영 안정화.',
@@ -139,7 +141,7 @@ class PortfolioData {
     ProjectItem(
       title: 'Visual Vive - KT Altimedia Launcher / Service 앱',
       period: '2024.10 ~ 진행 중',
-      platform: 'Flutter - Android TV, Android Mobile, iOS, Web',
+      platform: 'Flutter App - Android TV, Android Mobile, iOS, Web',
       summary:
       'KT Altimedia 자체 홈포탈/런처 제품으로, 콘텐츠 모듈을 조합해 UI를 구성하고 '
           'TV·모바일·웹으로 송출하는 멀티플랫폼 서비스입니다.',
@@ -153,7 +155,7 @@ class PortfolioData {
       ],
       architecture: 'Feature 기반 모듈 구조 + Riverpod 단방향 상태 관리',
       language: 'Dart',
-      tech: 'Flutter SDK, Riverpod, PlatformChannel, FocusTraversal, SharedPreferences',
+      tech: ' Riverpod, Platform Channels, SharedPreferences, Dio',
       achievement:
       'IBC(국제방송박람회) 전시 데모 구축 및 KT 본사 제품 도입 검토 POC 참여. '
           '멀티플랫폼 동시 지원 구조를 구축하여 사내 표준 사례로 활용.',

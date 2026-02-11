@@ -118,11 +118,18 @@ class _AnimatedNavBarState extends State<AnimatedNavBar>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '현영우',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppTheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.code_rounded,
+                color: AppTheme.primary,
+                size: 22,
+              ),
             ),
             Builder(
               builder: (context) => IconButton(
