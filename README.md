@@ -1,9 +1,9 @@
-# 현영우 포트폴리오
+# 현영우 Portfolio
 
-도전하고 발전하는 개발자 **현영우**의 포트폴리오 사이트입니다.
+도전하고 발전하는 개발자 **현영우**의 Portfolio 사이트입니다.
 
 - **라이브 미리보기:** [https://ieeh1016.github.io/portfolio/](https://ieeh1016.github.io/portfolio/)
-- Flutter로 제작된 웹/앱 포트폴리오입니다.
+- Flutter로 제작된 웹/앱 Portfolio입니다.
 
 ## 실행 방법
 

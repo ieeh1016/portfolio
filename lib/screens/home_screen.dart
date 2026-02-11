@@ -7,13 +7,11 @@ import '../widgets/scroll_animations.dart';
 import '../widgets/blob_background.dart';
 import '../widgets/animated_nav_bar.dart';
 import '../widgets/scroll_progress_indicator.dart';
-import '../widgets/theme_toggle.dart';
 import '../widgets/mobile_nav_drawer.dart';
 import '../widgets/link_button.dart';
 
 class HomeScreen extends StatefulWidget {
-  final Function(bool) onThemeToggle;
-  const HomeScreen({super.key, required this.onThemeToggle});
+  const HomeScreen({super.key});
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -24,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _arrowCtrl;
   final Map<String, GlobalKey> _sectionKeys = {};
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final Set<int> _expandedCareerIndices = {};
 
   bool get _isMobile => MediaQuery.of(context).size.width < 600;
 
@@ -95,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       children: [
         ScrollReveal(
           delay: delay,
-          offset: const Offset(-40, 0),
+          offset: const Offset(0, 50),
           child: Text(
             title,
             style: GoogleFonts.syne(textStyle: Theme.of(context).textTheme.headlineMedium),
@@ -115,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: _isMobile
@@ -140,26 +138,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHero(context, isDark),
-                _buildStats(context, isDark),
+                _buildHero(context),
+                _buildStats(context),
                 const SizedBox(height: 120),
-                _buildAbout(context, isDark),
+                _buildAbout(context),
                 const SizedBox(height: 120),
-                _buildSkills(context, isDark),
+                _buildSkills(context),
                 const SizedBox(height: 120),
-                _buildCareer(context, isDark),
+                _buildCareer(context),
                 const SizedBox(height: 120),
-                _buildEducation(context, isDark),
+                _buildEducation(context),
                 const SizedBox(height: 120),
-                _buildCerts(context, isDark),
+                _buildCerts(context),
                 const SizedBox(height: 120),
-                _buildAwards(context, isDark),
+                _buildAwards(context),
                 const SizedBox(height: 120),
-                _buildActivities(context, isDark),
+                _buildActivities(context),
                 const SizedBox(height: 120),
-                _buildContact(context, isDark),
+                _buildContact(context),
                 const SizedBox(height: 60),
-                _buildFooter(context, isDark),
+                _buildFooter(context),
               ],
             ),
           ),
@@ -173,11 +171,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
           ScrollProgressIndicator(scrollController: _scrollController),
-          Positioned(
-            top: 80,
-            right: _isMobile ? 16 : 40,
-            child: ThemeToggle(isDark: isDark, onToggle: widget.onThemeToggle),
-          ),
         ],
       ),
     );
@@ -186,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // HERO - 풀스크린, 타이핑 이름, 패럴랙스
   // ══════════════════════════════════════
-  Widget _buildHero(BuildContext context, bool isDark) {
+  Widget _buildHero(BuildContext context) {
     final screenH = MediaQuery.of(context).size.height;
     final nameSize = _isMobile ? 48.0 : 72.0;
     final name = PortfolioData.name;
@@ -223,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     style: GoogleFonts.syne(
                       fontSize: nameSize,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppTheme.darkTextPrimary : AppTheme.textPrimary,
+                      color: AppTheme.textPrimary,
                       letterSpacing: -2,
                       height: 1.1,
                     ),
@@ -237,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       child: Text(
                         PortfolioData.tagline,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: isDark ? AppTheme.darkTextSecondary : AppTheme.textSecondary,
+                          color: AppTheme.textSecondary,
                           fontSize: _isMobile ? 18 : 22,
                         ),
                       ),
@@ -280,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             'SCROLL',
                             style: TextStyle(
                               fontSize: 11,
-                              color: isDark ? AppTheme.darkTextTertiary : AppTheme.textTertiary,
+                              color: AppTheme.textTertiary,
                               letterSpacing: 4,
                               fontWeight: FontWeight.w500,
                             ),
@@ -309,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // STATS - 카운트업 숫자
   // ══════════════════════════════════════
-  Widget _buildStats(BuildContext context, bool isDark) {
+  Widget _buildStats(BuildContext context) {
     final numStyle = GoogleFonts.syne(
       fontSize: _isMobile ? 36 : 48,
       fontWeight: FontWeight.w700,
@@ -324,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     ];
 
     return Container(
-      color: (isDark ? AppTheme.darkSurface : AppTheme.surfaceElevated).withValues(alpha: 0.8),
+      color: AppTheme.surfaceElevated.withValues(alpha: 0.8),
       padding: EdgeInsets.symmetric(vertical: _isMobile ? 48 : 80),
       child: _constrained(
         _isMobile
@@ -350,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildStatItem(_StatData data, TextStyle? numStyle, TextStyle? labelStyle, Duration delay) {
     return ScrollReveal(
       delay: delay,
-      offset: const Offset(0, 40),
+      offset: const Offset(0, 50),
       child: Column(
         children: [
           CountUpText(end: data.value, suffix: data.suffix, style: numStyle, delay: delay),
@@ -364,35 +357,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // ABOUT - 타이핑 텍스트
   // ══════════════════════════════════════
-  Widget _buildAbout(BuildContext context, bool isDark) {
+  Widget _buildAbout(BuildContext context) {
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle('소개', key: _sectionKeys['about']),
-        TypewriterText(
-          text: PortfolioData.tagline,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontSize: _isMobile ? 22 : 28,
-            fontWeight: FontWeight.w700,
-            height: 1.4,
+        ScrollReveal(
+          delay: Duration.zero,
+          offset: const Offset(0, 50),
+          child: Text(
+            PortfolioData.tagline,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontSize: _isMobile ? 22 : 28,
+              fontWeight: FontWeight.w700,
+              height: 1.4,
+            ),
           ),
-          totalDuration: const Duration(milliseconds: 1800),
         ),
         const SizedBox(height: 20),
         ScrollReveal(
-          delay: const Duration(milliseconds: 600),
+          delay: const Duration(milliseconds: 200),
+          offset: const Offset(0, 50),
           child: Text(
             '${PortfolioData.companyName} ${PortfolioData.position}으로\n${PortfolioData.roleSummary}을 담당하고 있습니다.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               height: 1.8,
-              color: isDark ? AppTheme.darkTextSecondary : AppTheme.textSecondary,
+              color: AppTheme.textSecondary,
             ),
           ),
         ),
         const SizedBox(height: 24),
         ScrollReveal(
-          delay: const Duration(milliseconds: 900),
-          offset: const Offset(0, 30),
+          delay: const Duration(milliseconds: 400),
+          offset: const Offset(0, 50),
           child: Row(
             children: [
               _buildContactChip(Icons.phone_outlined, PortfolioData.phone, () => _launchTel(PortfolioData.phone)),
@@ -410,42 +407,73 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   // ══════════════════════════════════════
-  // SKILLS - 스태거 팝인
+  // SKILLS - 카테고리별 그룹 (Android/Flutter Portfolio 강조)
   // ══════════════════════════════════════
-  Widget _buildSkills(BuildContext context, bool isDark) {
+  Widget _buildSkills(BuildContext context) {
+    final categoryLabels = PortfolioData.skillsByCategory.keys.toList();
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle('기술 스택', key: _sectionKeys['skills']),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            for (var i = 0; i < PortfolioData.skills.length; i++)
-              ScaleReveal(
-                delay: Duration(milliseconds: 80 * i),
-                startScale: 0.5,
-                child: _HoverSkillChip(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primary.withValues(alpha: isDark ? 0.12 : 0.08),
-                      borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                      border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+        ScrollReveal(
+          delay: Duration.zero,
+          offset: const Offset(0, 50),
+          child: Text(
+            PortfolioData.highlightsSummary,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ),
+        const SizedBox(height: 28),
+        for (var c = 0; c < categoryLabels.length; c++) ...[
+          ScrollReveal(
+            delay: Duration(milliseconds: 100 * c),
+            offset: const Offset(0, 50),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                categoryLabels[c],
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppTheme.textTertiary,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
                     ),
-                    child: Text(
-                      PortfolioData.skills[i],
-                      style: TextStyle(
-                        color: AppTheme.primary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              for (var i = 0; i < (PortfolioData.skillsByCategory[categoryLabels[c]] ?? []).length; i++)
+                ScrollReveal(
+                  delay: Duration(milliseconds: 100 * c + 60 * i),
+                  offset: const Offset(0, 50),
+                  child: _HoverSkillChip(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                        border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+                      ),
+                      child: Text(
+                        (PortfolioData.skillsByCategory[categoryLabels[c]] ?? [])[i],
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-          ],
-        ),
+            ],
+          ),
+          if (c < categoryLabels.length - 1) const SizedBox(height: 20),
+        ],
       ],
     ));
   }
@@ -453,14 +481,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // CAREER - 타임라인 카드
   // ══════════════════════════════════════
-  Widget _buildCareer(BuildContext context, bool isDark) {
+  Widget _buildCareer(BuildContext context) {
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle('경력', key: _sectionKeys['career']),
         // 회사 헤더 (로고: assets/ktaltimedia.PNG)
         ScrollReveal(
-          offset: const Offset(0, 40),
+          offset: const Offset(0, 50),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -496,102 +524,217 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ],
           ),
         ),
-        const SizedBox(height: 32),
-        // 프로젝트 타임라인
+        const SizedBox(height: 40),
+        // 프로젝트 카드 (카드형 + 여백)
         for (var i = 0; i < PortfolioData.projects.length; i++) ...[
-          _buildProjectCard(PortfolioData.projects[i], i, isDark),
-          if (i < PortfolioData.projects.length - 1) const SizedBox(height: 20),
+          _buildProjectCard(PortfolioData.projects[i], i),
+          if (i < PortfolioData.projects.length - 1) const SizedBox(height: 32),
         ],
       ],
     ));
   }
 
-  Widget _buildProjectCard(ProjectItem project, int index, bool isDark) {
+  /// 프로젝트별 기술 스택을 칩으로 표시 (아키텍처 + tech 문자열 파싱)
+  Widget _buildProjectTechChips(ProjectItem project, {bool expanded = false}) {
+    final chips = <String>[
+      project.architecture,
+      ...project.tech.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty),
+    ];
+    final fontSize = expanded ? 13.0 : 12.0;
+    final padding = expanded
+        ? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)
+        : const EdgeInsets.symmetric(horizontal: 10, vertical: 6);
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: chips.map((label) {
+        return Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            color: AppTheme.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.primary,
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildProjectCard(ProjectItem project, int index) {
     final delayMs = 200 * index;
+    final isExpanded = _expandedCareerIndices.contains(index);
     return ScrollReveal(
       delay: Duration(milliseconds: delayMs),
-      offset: const Offset(40, 30),
-      child: _HoverProjectCard(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(left: BorderSide(color: AppTheme.primary, width: 3)),
-          ),
-          padding: const EdgeInsets.only(left: 24),
-          child: Column(
+      offset: const Offset(0, 50),
+      child: Container(
+        padding: EdgeInsets.all(_isMobile ? 20 : 28),
+        decoration: BoxDecoration(
+          color: AppTheme.surface.withValues(alpha: 0.9),
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+          boxShadow: AppTheme.cardShadow,
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 헤더: 제목 + 기간 + 플랫폼
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Text(
                     project.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          height: 1.3,
+                        ),
                   ),
                 ),
+                const SizedBox(width: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: AppTheme.primary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(4),
+                    color: AppTheme.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     project.period,
-                    style: TextStyle(color: AppTheme.primary, fontSize: 12, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: AppTheme.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               '${project.platform} · ${project.language}',
-              style: TextStyle(color: AppTheme.primary, fontSize: 13, fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
-            const SizedBox(height: 8),
-            Text(project.summary, style: Theme.of(context).textTheme.bodyMedium),
-            const SizedBox(height: 12),
-            // 담당 업무
-            for (final task in project.tasks)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
+            const SizedBox(height: 16),
+            // 기술 스택 (접힌 상태에서도 노출 — 개발자 Portfolio 강조)
+            _buildProjectTechChips(project),
+            const SizedBox(height: 20),
+            // 역할 (라벨 없이 한 줄)
+            Text(
+              project.role,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.textSecondary,
+                    height: 1.6,
+                  ),
+            ),
+            const SizedBox(height: 20),
+            // 요약
+            Text(
+              project.summary,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.7),
+            ),
+            const SizedBox(height: 24),
+            // 펼침: 담당 업무 · 성과 · 기술 스택
+            if (isExpanded) ...[
+              Text(
+                '담당 업무',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppTheme.textTertiary,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: 10),
+              ...project.tasks.map(
+                (task) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '·',
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          task,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('  ·  ', style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold)),
-                    Expanded(child: Text(task, style: Theme.of(context).textTheme.bodySmall)),
+                    Icon(Icons.emoji_events_outlined, size: 18, color: AppTheme.primary),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        project.achievement,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppTheme.primary,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                            ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            const SizedBox(height: 12),
-            // 성과
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppTheme.primary.withValues(alpha: isDark ? 0.08 : 0.05),
-                borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.emoji_events, size: 16, color: AppTheme.primary),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      project.achievement,
-                      style: TextStyle(fontSize: 13, color: AppTheme.primary, fontWeight: FontWeight.w500),
+              const SizedBox(height: 20),
+              Text(
+                '기술 스택',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppTheme.textTertiary,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                ],
               ),
-            ),
-            const SizedBox(height: 8),
-            // 기술 스택
-            Text(
-              '${project.architecture} · ${project.tech}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 12),
-            ),
+              const SizedBox(height: 12),
+              _buildProjectTechChips(project, expanded: true),
+              const SizedBox(height: 20),
+              TextButton.icon(
+                onPressed: () => setState(() => _expandedCareerIndices.remove(index)),
+                icon: const Icon(Icons.expand_less, size: 20),
+                label: const Text('접기'),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppTheme.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+              ),
+            ] else
+              TextButton.icon(
+                onPressed: () => setState(() => _expandedCareerIndices.add(index)),
+                icon: const Icon(Icons.expand_more, size: 20),
+                label: const Text('업무 · 성과 보기'),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppTheme.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+              ),
           ],
         ),
-      ),
       ),
     );
   }
@@ -599,7 +742,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // EDUCATION
   // ══════════════════════════════════════
-  Widget _buildEducation(BuildContext context, bool isDark) {
+  Widget _buildEducation(BuildContext context) {
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -609,9 +752,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: (isDark ? AppTheme.darkSurface : AppTheme.surface).withValues(alpha: 0.85),
+              color: AppTheme.surface.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-              border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06)),
+              border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -619,7 +762,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(PortfolioData.schoolName, style: Theme.of(context).textTheme.titleLarge),
+                      child: Text(PortfolioData.schoolName,
+                          style: Theme.of(context).textTheme.titleLarge),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -637,11 +781,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 const SizedBox(height: 8),
                 Text('${PortfolioData.major} · ${PortfolioData.educationPeriod} 졸업', style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 16),
-                LineReveal(color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06), height: 1),
+                LineReveal(color: Colors.black.withValues(alpha: 0.06), height: 1),
                 const SizedBox(height: 16),
                 ScrollReveal(
                   delay: const Duration(milliseconds: 300),
-                  offset: const Offset(0, 20),
+                  offset: const Offset(0, 50),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -664,7 +808,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // CERTIFICATES
   // ══════════════════════════════════════
-  Widget _buildCerts(BuildContext context, bool isDark) {
+  Widget _buildCerts(BuildContext context) {
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -672,7 +816,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         for (var i = 0; i < PortfolioData.certificates.length; i++)
           ScrollReveal(
             delay: Duration(milliseconds: 150 * i),
-            offset: const Offset(30, 20),
+            offset: const Offset(0, 50),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Row(
@@ -706,7 +850,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         const SizedBox(height: 8),
         ScrollReveal(
           delay: Duration(milliseconds: 150 * PortfolioData.certificates.length),
-          offset: const Offset(30, 20),
+          offset: const Offset(0, 50),
           child: Row(
             children: [
               Container(
@@ -730,7 +874,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // AWARDS
   // ══════════════════════════════════════
-  Widget _buildAwards(BuildContext context, bool isDark) {
+  Widget _buildAwards(BuildContext context) {
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -738,7 +882,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         for (var i = 0; i < PortfolioData.awards.length; i++)
           ScrollReveal(
             delay: Duration(milliseconds: 200 * i),
-            offset: const Offset(0, 40),
+            offset: const Offset(0, 50),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 24),
               child: Row(
@@ -751,7 +895,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       color: AppTheme.primary,
                       borderRadius: BorderRadius.circular(AppTheme.cardRadius),
                     ),
-                    child: Icon(Icons.emoji_events, size: 18, color: AppTheme.darkBackground),
+                    child: Icon(Icons.emoji_events, size: 18, color: Colors.white),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -782,7 +926,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // ACTIVITIES
   // ══════════════════════════════════════
-  Widget _buildActivities(BuildContext context, bool isDark) {
+  Widget _buildActivities(BuildContext context) {
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -790,15 +934,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         for (var i = 0; i < PortfolioData.activities.length; i++)
           ScrollReveal(
             delay: Duration(milliseconds: 200 * i),
-            offset: Offset(i.isEven ? -40 : 40, 30),
+            offset: const Offset(0, 50),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppTheme.darkSurface : AppTheme.surface).withValues(alpha: 0.85),
+                  color: AppTheme.surface.withValues(alpha: 0.85),
                   borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                  border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06)),
+                  border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -813,7 +957,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ),
                           child: Text(
                             PortfolioData.activities[i].type,
-                            style: TextStyle(color: AppTheme.darkBackground, fontSize: 12, fontWeight: FontWeight.w700),
+                            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -845,19 +989,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // CONTACT
   // ══════════════════════════════════════
-  Widget _buildContact(BuildContext context, bool isDark) {
+  Widget _buildContact(BuildContext context) {
     return _constrained(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle('연락처 · 링크', key: _sectionKeys['contact']),
         ScrollReveal(
-          offset: const Offset(0, 40),
+          offset: const Offset(0, 50),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: (isDark ? AppTheme.darkSurface : AppTheme.surface).withValues(alpha: 0.85),
+              color: AppTheme.surface.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-              border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06)),
+              border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -866,11 +1010,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 _buildContactRow(Icons.email_outlined, '이메일', PortfolioData.email, () => _launchMail(PortfolioData.email)),
                 _buildContactRow(Icons.location_on_outlined, '주소', PortfolioData.address, null),
                 const SizedBox(height: 16),
-                LineReveal(color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06), height: 1, delay: const Duration(milliseconds: 300)),
+                LineReveal(color: Colors.black.withValues(alpha: 0.06), height: 1, delay: const Duration(milliseconds: 300)),
                 const SizedBox(height: 20),
                 ScrollReveal(
                   delay: const Duration(milliseconds: 400),
-                  offset: const Offset(0, 20),
+                  offset: const Offset(0, 50),
                   child: Wrap(
                     spacing: 12,
                     runSpacing: 12,
@@ -922,16 +1066,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ══════════════════════════════════════
   // FOOTER
   // ══════════════════════════════════════
-  Widget _buildFooter(BuildContext context, bool isDark) {
+  Widget _buildFooter(BuildContext context) {
     return ScrollReveal(
-      offset: const Offset(0, 20),
+      offset: const Offset(0, 50),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 40),
         child: Center(
           child: Text(
             '${PortfolioData.name} · ${DateTime.now().year}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isDark ? AppTheme.darkTextTertiary : AppTheme.textTertiary,
+              color: AppTheme.textTertiary,
               letterSpacing: 2,
             ),
           ),
@@ -972,7 +1116,6 @@ class _HoverContactChipState extends State<_HoverContactChip> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return MouseRegion(
       onEnter: (_) => setState(() => _hover = true),
       onExit: (_) => setState(() => _hover = false),
@@ -1002,7 +1145,7 @@ class _HoverContactChipState extends State<_HoverContactChip> {
                   widget.text,
                   style: TextStyle(
                     fontSize: 13,
-                    color: isDark ? AppTheme.darkTextSecondary : AppTheme.textSecondary,
+                    color: AppTheme.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -1037,44 +1180,6 @@ class _HoverSkillChipState extends State<_HoverSkillChip> {
         scale: _hover ? 1.05 : 1.0,
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-class _HoverProjectCard extends StatefulWidget {
-  final Widget child;
-
-  const _HoverProjectCard({required this.child});
-
-  @override
-  State<_HoverProjectCard> createState() => _HoverProjectCardState();
-}
-
-class _HoverProjectCardState extends State<_HoverProjectCard> {
-  bool _hover = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hover = true),
-      onExit: (_) => setState(() => _hover = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        transform: Matrix4.translationValues(0, _hover ? -3 : 0, 0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          boxShadow: _hover
-              ? [
-                  BoxShadow(
-                    color: AppTheme.primary.withValues(alpha: 0.08),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
-        ),
         child: widget.child,
       ),
     );

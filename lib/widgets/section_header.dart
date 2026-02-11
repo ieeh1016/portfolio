@@ -27,7 +27,7 @@ class SectionHeader extends StatelessWidget {
                   color: AppTheme.primary,
                   borderRadius: BorderRadius.circular(AppTheme.cardRadius),
                 ),
-                child: Icon(icon, size: 20, color: AppTheme.darkBackground),
+                child: Icon(icon, size: 20, color: Colors.white),
               ),
               const SizedBox(width: 12),
             ],

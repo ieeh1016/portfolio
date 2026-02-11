@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// 브루탈 + 타이포그래피: 다크 기본, 단일 포인트 컬러, 각진 형태
+/// 라이트 기본, 검정/회색 톤
 class AppTheme {
-  // 단일 포인트 컬러 (네온 틸)
-  static const Color primary = Color(0xFF00D4AA);
-  static const Color primaryLight = Color(0xFFE6FAF5);
-  static const Color secondary = Color(0xFF00D4AA);
+  // 포인트 컬러: 검정
+  static const Color primary = Color(0xFF1A1A1A);
+  static const Color primaryLight = Color(0xFFE8E8E8);
+  static const Color secondary = Color(0xFF1A1A1A);
 
   // Light
   static const Color background = Color(0xFFFAFAFA);
@@ -23,17 +23,16 @@ class AppTheme {
   static const Color darkTextSecondary = Color(0xFFA3A3A3);
   static const Color darkTextTertiary = Color(0xFF737373);
 
-  // 그라데이션 최소화 (액센트 단색 위주, 필요 시만)
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF00D4AA), Color(0xFF00A884)],
+    colors: [Color(0xFF2D2D2D), Color(0xFF1A1A1A)],
   );
 
   static const LinearGradient accentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF00D4AA), Color(0xFF00A884)],
+    colors: [Color(0xFF2D2D2D), Color(0xFF1A1A1A)],
   );
 
   static const LinearGradient heroGradient = primaryGradient;
@@ -128,7 +127,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primary,
-          foregroundColor: darkBackground,
+          foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
@@ -226,7 +225,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primary,
-          foregroundColor: darkBackground,
+          foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(

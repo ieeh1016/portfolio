@@ -9,11 +9,10 @@ class BlobBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       children: [
         CustomPaint(
-          painter: _MinimalGridPainter(isDark: isDark),
+          painter: _MinimalGridPainter(),
           size: Size.infinite,
         ),
         child,
@@ -23,20 +22,12 @@ class BlobBackground extends StatelessWidget {
 }
 
 class _MinimalGridPainter extends CustomPainter {
-  final bool isDark;
-
-  _MinimalGridPainter({required this.isDark});
-
   @override
   void paint(Canvas canvas, Size size) {
-    final bg = isDark ? AppTheme.darkBackground : AppTheme.background;
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = bg);
-
-    final lineColor = isDark
-        ? Colors.white.withOpacity(0.03)
-        : Colors.black.withOpacity(0.04);
-    final paint = Paint()..color = lineColor..strokeWidth = 1;
-
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = AppTheme.background);
+    final paint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.04)
+      ..strokeWidth = 1;
     const step = 48.0;
     for (double x = 0; x <= size.width + step; x += step) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
@@ -47,7 +38,5 @@ class _MinimalGridPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MinimalGridPainter oldDelegate) {
-    return oldDelegate.isDark != isDark;
-  }
+  bool shouldRepaint(covariant _MinimalGridPainter oldDelegate) => false;
 }
