@@ -79,10 +79,9 @@ class PortfolioData {
       role:
       '마이메뉴·검색 영역 전담 개발자로 그룹사 신규 적용 과정에서 발생한 주요 이슈 분석, 구조 개선 및 안정화 작업을 주도했습니다.',
       tasks: [
-        '사업자별 UI/GUI 가이드 차이 분석 후 레이아웃·리소스 구조 정리 및 다크/라이트 모드 대응 구조 개선',
+        '사업자별 UI/GUI 가이드 차이 분석 후 레이아웃·리소스 구조 정리 및 개선',
         '마이메뉴 진입 시 비정상 종료 및 프로필 전환 지연 이슈의 원인을 추적하여 비동기 처리 구조 개선 및 패치 배포',
         '검색 정렬·필터 로직 리팩토링으로 중복 노출 및 빈 결과 케이스 제거',
-        'Retrofit·OkHttp 기반 네트워크 레이어 공통화로 그룹사별 엔드포인트 분기 최소화 및 유지보수성 개선',
       ],
       architecture: '기존 MVC 구조 유지보수 및 안정화',
       language: 'Java',
@@ -106,7 +105,6 @@ class PortfolioData {
         'Hilt 기반 DI 구조 설계 및 StateFlow 기반 단방향 UI 상태 관리 적용',
         '마이메뉴: 키즈모드, 플레이리스트·즐겨찾기 CRUD, 멀티 프로필 전환, 세이펜 연동 기능 Native 전면 구현',
         '검색: 통합 검색, 연령·카테고리 필터, 자동완성·트렌드 검색 API 연동 및 로컬 캐싱 구조 설계',
-        'ExoPlayer 연동 구조 개선 및 Coil 캐시 전략 적용으로 콘텐츠 진입 체감 속도 개선',
       ],
       architecture: 'MVVM + Clean Architecture (Presentation / Domain / Data Layer 분리)',
       language: 'Kotlin',
@@ -150,8 +148,8 @@ class PortfolioData {
       tasks: [
         '콘텐츠 구매·DCA 연동·EPG·My메뉴·통합 검색·VOD 상세 등 핵심 기능을 Flutter 단일 코드베이스로 설계 및 구현',
         'Android TV 리모컨 포커스 충돌 문제 해결: FocusTraversalPolicy 커스터마이징 및 Grid/Scrollable 포커스 안정화',
-        '플랫폼별 딥링크 대응을 위한 Custom RouteManager 설계 및 PlatformChannel 연동 구조 구현',
-        '상태관리를 Provider 구조에서 Riverpod 기반 단방향 데이터 흐름 구조로 전환하여 테스트·유지보수성 개선',
+        'Custom RouteManager 설계 및 PlatformChannel 연동 구조 구현',
+        '상태관리를 Riverpod 기반 단방향 데이터 흐름 구조로 설계하여 테스트·유지보수성 향상',
       ],
       architecture: 'Feature 기반 모듈 구조 + Riverpod 단방향 상태 관리',
       language: 'Dart',
